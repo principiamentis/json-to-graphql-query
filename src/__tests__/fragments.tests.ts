@@ -1,11 +1,11 @@
 
 import { expect } from 'chai';
-import { jsonToGraphQLQuery } from '../';
+import { jsonToGraphQLQuery, type QueryJSON } from '../';
 
 describe('jsonToGraphQLQuery() - fragments', () => {
 
     it('supports inline fragments', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __on: {
@@ -21,7 +21,7 @@ describe('jsonToGraphQLQuery() - fragments', () => {
     });
 
     it('supports inline fragments with subfields on same level', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     title: true,
@@ -38,7 +38,7 @@ describe('jsonToGraphQLQuery() - fragments', () => {
     });
 
     it('supports multiple inline fragments', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __on: [
@@ -49,7 +49,8 @@ describe('jsonToGraphQLQuery() - fragments', () => {
                         {
                             __typeName: 'UnconfigurablePost',
                             name: true
-                        }]
+                        }
+                    ]
                 }
             }
         };
@@ -59,19 +60,19 @@ describe('jsonToGraphQLQuery() - fragments', () => {
     });
 
     it('supports full inline fragments', () => {
-      const query = {
-          query: {
-              Posts: {
-                  __all_on: [
-                      'ConfigurablePost',
-                      'PageInfo'
-                  ]
-              }
-          }
-      };
-      expect(jsonToGraphQLQuery(query)).to.equal(
-          'query { Posts { ...ConfigurablePost ...PageInfo } }'
-      );
-  });
+        const query: QueryJSON =  {
+            query: {
+                Posts: {
+                    __all_on: [
+                        'ConfigurablePost',
+                        'PageInfo'
+                    ]
+                }
+            }
+        };
+        expect(jsonToGraphQLQuery(query)).to.equal(
+            'query { Posts { ...ConfigurablePost ...PageInfo } }'
+        );
+    });
 
 });
