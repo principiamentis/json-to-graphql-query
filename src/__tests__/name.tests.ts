@@ -1,9 +1,9 @@
 import { expect } from 'chai';
-import { jsonToGraphQLQuery, EnumType, VariableType } from '../';
+import { jsonToGraphQLQuery, EnumType, VariableType, type QueryJSON, type MutationJSON } from '../';
 
 describe('jsonToGraphQLQuery() - name', () => {
     it('supports Named Queries', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 __name: 'NewName',
                 lorem: {
@@ -28,7 +28,7 @@ describe('jsonToGraphQLQuery() - name', () => {
     });
 
     it('supports Named Mutations', () => {
-        const query = {
+        const query: MutationJSON = {
             mutation: {
                 __name: 'NewName',
                 one: {
@@ -55,7 +55,7 @@ describe('jsonToGraphQLQuery() - name', () => {
 
 describe('jsonToGraphQLQuery() - combinations', () => {
     it('correctly converts query with name/ empty variables', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 __name: 'NewName',
                 __variables: {},
@@ -80,7 +80,7 @@ describe('jsonToGraphQLQuery() - combinations', () => {
     });
 
     it('correctly converts query with name/variables', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 __name: 'NewName',
                 __variables: {
@@ -108,7 +108,7 @@ describe('jsonToGraphQLQuery() - combinations', () => {
     });
 
     it('correctly converts query with variables/name/alias/args/variable/fragments', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 __name: 'NewName',
                 __variables: {

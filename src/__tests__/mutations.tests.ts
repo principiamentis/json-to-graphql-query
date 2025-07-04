@@ -1,9 +1,9 @@
 import { expect } from 'chai';
-import { jsonToGraphQLQuery } from '../';
+import { jsonToGraphQLQuery, type MutationJSON } from '../';
 
 describe('jsonToGraphQLQuery() - mutations', () => {
     it('simple mutation', () => {
-        const mutation = {
+        const mutation: MutationJSON = {
             mutation: {
                 delete_post: {
                     __args: { id: 1234 },
@@ -21,7 +21,7 @@ describe('jsonToGraphQLQuery() - mutations', () => {
     });
 
     it('correctly converts mutations with no specified return fields', () => {
-        const query = {
+        const query: MutationJSON = {
             mutation: {
                 create_post: {
                     __args: {

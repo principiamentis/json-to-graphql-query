@@ -1,9 +1,9 @@
 import { expect } from 'chai';
-import { jsonToGraphQLQuery } from '../';
+import { jsonToGraphQLQuery, type QueryJSON } from '../';
 
 describe('jsonToGraphQLQuery() - falsy keys', () => {
     it('does not include fields which value is false', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __args: {
@@ -24,7 +24,7 @@ describe('jsonToGraphQLQuery() - falsy keys', () => {
     });
 
     it('includes fields with falsy values if includeFalsyKeys is true', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __args: {
@@ -45,7 +45,7 @@ describe('jsonToGraphQLQuery() - falsy keys', () => {
     });
 
     it('does not include object with only false keys', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     id: true,
@@ -63,7 +63,7 @@ describe('jsonToGraphQLQuery() - falsy keys', () => {
     });
 
     it('does include object with only false keys if includeFalsyKeys is true', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     id: true,
@@ -81,7 +81,7 @@ describe('jsonToGraphQLQuery() - falsy keys', () => {
     });
 
     it('Includes the nested object if includeFalsyKeys is true', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     id: true,
@@ -100,7 +100,7 @@ describe('jsonToGraphQLQuery() - falsy keys', () => {
     });
 
     it('does not include the object if nested object has falsy values', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     id: true,
@@ -117,7 +117,7 @@ describe('jsonToGraphQLQuery() - falsy keys', () => {
     });
 
     it('skip objects when deeply nested keys contain falsy values', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 id: true,
                 Posts: {
@@ -145,7 +145,7 @@ describe('jsonToGraphQLQuery() - falsy keys', () => {
     });
 
     it('Include values if nested object has falsy values and includeFalsyKeys is true', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     id: true,

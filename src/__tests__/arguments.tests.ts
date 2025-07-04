@@ -1,11 +1,11 @@
 
 import { expect } from 'chai';
-import { jsonToGraphQLQuery } from '../';
+import { jsonToGraphQLQuery, type QueryJSON } from '../';
 
 describe('jsonToGraphQLQuery() - arguments', () => {
 
     it('converts a query with simple arguments', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __args: {
@@ -29,7 +29,7 @@ describe('jsonToGraphQLQuery() - arguments', () => {
     });
 
     it('converts a query with JSON arguments', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __args: {
@@ -56,7 +56,7 @@ describe('jsonToGraphQLQuery() - arguments', () => {
     });
 
     it('converts a query with JSON arguments containing arrays of objects', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __args: {
@@ -83,7 +83,7 @@ describe('jsonToGraphQLQuery() - arguments', () => {
     });
 
     it('converts a query with null arguments and nested nulls', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __args: {
@@ -97,7 +97,7 @@ describe('jsonToGraphQLQuery() - arguments', () => {
                     post_date: true
                 }
             }
-        } as any;
+        };
         expect(jsonToGraphQLQuery(query, { pretty: true })).to.equal(
             `query {
     Posts (where: {id: null}, orderBy: null) {
@@ -109,7 +109,7 @@ describe('jsonToGraphQLQuery() - arguments', () => {
     });
 
     it('converts a query with nested objects and arguments', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __args: {
@@ -144,7 +144,7 @@ describe('jsonToGraphQLQuery() - arguments', () => {
     });
 
     it('works with pretty mode turned off', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __args: {
@@ -162,7 +162,7 @@ describe('jsonToGraphQLQuery() - arguments', () => {
     });
 
     it('Empty args object should not generate parentheses', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __args: {},

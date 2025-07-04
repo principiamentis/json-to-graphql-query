@@ -1,11 +1,11 @@
 
 import { expect } from 'chai';
-import { jsonToGraphQLQuery } from '../';
+import { jsonToGraphQLQuery, type QueryJSON } from '../';
 
 describe('jsonToGraphQLQuery() - ignoreFields option', () => {
 
     it('ignores a field that exists in the initial object', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     thisShouldBeIgnored: {
@@ -19,7 +19,7 @@ describe('jsonToGraphQLQuery() - ignoreFields option', () => {
         };
         expect(jsonToGraphQLQuery(query, {
             pretty: true,
-            ignoreFields: ['thisShouldBeIgnored']
+            ignoreFields: ['thisShouldBeIgnored'],
         })).to.equal(
             `query {
     Posts {
@@ -31,7 +31,7 @@ describe('jsonToGraphQLQuery() - ignoreFields option', () => {
     });
 
     it('we can ignore apollo __typename keys', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __typename: 'Posts',
@@ -47,7 +47,7 @@ describe('jsonToGraphQLQuery() - ignoreFields option', () => {
         };
         expect(jsonToGraphQLQuery(query, {
             pretty: true,
-            ignoreFields: ['__typename']
+            ignoreFields: ['__typename'],
         })).to.equal(
             `query {
     Posts {

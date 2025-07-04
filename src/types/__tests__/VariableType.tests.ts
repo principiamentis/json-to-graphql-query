@@ -1,11 +1,11 @@
 
 import { expect } from 'chai';
-import { jsonToGraphQLQuery, VariableType } from '../../';
+import { jsonToGraphQLQuery, type QueryJSON, VariableType } from '../../';
 
 describe('VariableType()', () => {
 
     it('converts query variables', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 __variables: {
                     someString: 'String!',

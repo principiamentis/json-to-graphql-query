@@ -1,11 +1,11 @@
 
 import { expect } from 'chai';
-import { jsonToGraphQLQuery } from '../';
+import { jsonToGraphQLQuery, type QueryJSON } from '../';
 
 describe('jsonToGraphQLQuery() - aliases', () => {
 
     it('supports multiple aliases for one type', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 lorem: {
                     __aliasFor: 'Posts',

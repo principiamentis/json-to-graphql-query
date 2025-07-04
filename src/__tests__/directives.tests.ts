@@ -1,11 +1,11 @@
 
 import { expect } from 'chai';
-import { jsonToGraphQLQuery } from '../';
+import { jsonToGraphQLQuery, type QueryJSON } from '../';
 
 describe('jsonToGraphQLQuery() - directives', () => {
 
     it('converts a simple query with args and directives with no arguments', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __args: {
@@ -22,7 +22,7 @@ describe('jsonToGraphQLQuery() - directives', () => {
                     post_date: true
                 }
             }
-        } as any;
+        };
         expect(jsonToGraphQLQuery(query, { pretty: true })).to.equal(
             `query {
     Posts (where: {id: 10}, orderBy: "flibble") @client {
@@ -34,7 +34,7 @@ describe('jsonToGraphQLQuery() - directives', () => {
     });
 
     it('converts a complex query with directives with no arguments', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 diet: {
                     __directives: {
@@ -57,23 +57,23 @@ describe('jsonToGraphQLQuery() - directives', () => {
                     },
                     title: 'Diet'
                 },
-                someOtherAbritraryKey: {
+                someOtherArbitraryKey: {
                     __directives: {
                         client: true
                     },
                     arb1: 'arbitrary value',
-                    arb2: 'some other arbitrary value'
+                    arb2: 'some other arbitrary value',
                 }
             }
         };
         const expected = 'query { diet @client { id options { ' +
             'mood { category id selected } weight { category icon id text } } ' +
-            'title } someOtherAbritraryKey @client { arb1 arb2 } }';
+            'title } someOtherArbitraryKey @client { arb1 arb2 } }';
         expect(jsonToGraphQLQuery(query)).to.equal(expected);
     });
 
     it('converts a simple query with args and multiple directives', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __args: {
@@ -93,7 +93,7 @@ describe('jsonToGraphQLQuery() - directives', () => {
                     post_date: true,
                 },
             },
-        } as any;
+        };
         expect(jsonToGraphQLQuery(query, { pretty: true })).to.equal(
             `query {
     Posts (where: {id: 10}, orderBy: "flibble") @client @withArgs(id: [1, 2, 3]) {
@@ -106,7 +106,7 @@ describe('jsonToGraphQLQuery() - directives', () => {
     });
 
     it('converts a simple query with args and multiple directives but a directive has an empty object', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 Posts: {
                     __args: {
@@ -124,7 +124,7 @@ describe('jsonToGraphQLQuery() - directives', () => {
                     post_date: true,
                 },
             },
-        } as any;
+        };
         expect(jsonToGraphQLQuery(query, { pretty: true })).to.equal(
             `query {
     Posts (where: {id: 10}, orderBy: "flibble") @client @withArgs {
@@ -137,7 +137,7 @@ describe('jsonToGraphQLQuery() - directives', () => {
     });
 
     it('converts a complex query with multiple directives', () => {
-        const query = {
+        const query: QueryJSON = {
             query: {
                 diet: {
                     __directives: {
@@ -160,7 +160,7 @@ describe('jsonToGraphQLQuery() - directives', () => {
                     },
                     title: 'Diet',
                 },
-                someOtherAbritraryKey: {
+                someOtherArbitraryKey: {
                     __directives: {
                         client: true,
                         withArgs: {
@@ -175,7 +175,7 @@ describe('jsonToGraphQLQuery() - directives', () => {
         const expected =
             'query { diet @client { id options { ' +
             'mood { category id selected } weight { category icon id text } } ' +
-            'title } someOtherAbritraryKey @client @withArgs(id: [1, 2, 3]) { arb1 arb2 } }';
+            'title } someOtherArbitraryKey @client @withArgs(id: [1, 2, 3]) { arb1 arb2 } }';
         expect(jsonToGraphQLQuery(query)).to.equal(expected);
     });
 

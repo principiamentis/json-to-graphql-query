@@ -3,6 +3,7 @@ import { VariableType } from './types/VariableType';
 
 export const configFields = [
     '__args',
+    // still in here for compatibility with v1.*
     '__alias',
     '__aliasFor',
     '__variables',
@@ -81,13 +82,88 @@ function getIndent(level: number): string {
     return Array(level * 4 + 1).join(' ');
 }
 
-function filterNonConfigFields(fieldName: string, ignoreFields: string[]) {
-    // Returns true if fieldName is not a 'configField'.
+/**
+ * Returns `true` if `fieldName` is not `ConfigField` and is not included to `ignoreFields`
+ */
+function filterNonConfigFields(fieldName: string, ignoreFields?: string[]) {
     return (
-        configFields.indexOf(fieldName) == -1 &&
-        ignoreFields.indexOf(fieldName) == -1
+        !configFields.includes(fieldName) &&
+        !ignoreFields?.includes(fieldName)
     );
 }
+
+type Primitive = string | number | boolean | EnumType | VariableType | null;
+type ArgValue = Primitive | ArgObject | ArgValue[];
+type ArgObject = {
+    [key: string]: ArgValue;
+};
+
+type ArgumentsJSON = ArgObject;
+
+type DirectivesJSON = {
+    [directiveName: string]: | true | ArgObject | undefined;
+    skip?: {
+        if: VariableType | boolean;
+    };
+    include?: {
+        if: VariableType | boolean;
+    };
+};
+
+type OnFragment = SelectionSetJSON & {
+    __typeName: string;
+};
+
+type AllOnFragment = string[];
+
+type Letter = 'a' | 'A' | 'b' | 'B' | 'c' | 'C' | 'd' | 'D' | 'e' | 'E' | 'f' | 'F' | 'g' | 'G' | 'h' | 'H' | 'i' | 'I' | 'j' | 'J' | 'k' | 'K' | 'l' | 'L' | 'm' | 'M' | 'n' | 'N' | 'o' | 'O' | 'p' | 'P' | 'q' | 'Q' | 'r' | 'R' | 's' | 'S' | 't' | 'T' | 'u' | 'U' | 'v' | 'V' | 'w' | 'W' | 'x' | 'X' | 'y' | 'Y' | 'z' | 'Z';
+type LetterOrDigit = Letter | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+/** Start with letter or underscore (NameStart), do not start with two underscores (disallow reserved names) */
+type UnreservedName = `${Letter}${string}` | `_${LetterOrDigit}${string}`;
+
+type SelectionSetJSON = {
+    [k in UnreservedName]: FieldJSON;
+} & {
+    __typename?: boolean | string;
+};
+type FieldJSON = boolean | string | number | FieldJSONNode | (null | FieldJSON)[];
+type FieldJSONNode = SelectionSetJSON & {
+    __args?: ArgumentsJSON;
+    __aliasFor?: string;
+    __directives?: DirectivesJSON;
+    __on?: OnFragment | OnFragment[];
+    __all_on?: AllOnFragment;
+};
+
+type FragmentJSON = {
+    fragment: SelectionSetJSON & {
+        __name?: string;
+    };
+};
+
+type TypeName = string;
+type TypeNameWithDefaultValue =
+    | `${'String' | 'ID'}${'' | '!'} = "${string}"`
+    | `${'Int' | 'Float'}${'' | '!'} = ${number}`
+    | `Boolean${'' | '!'} = ${boolean}`
+    | `${TypeName} = ${string}`;
+type VariableDeclarations = Record<string, TypeName | TypeNameWithDefaultValue>;
+
+export type QueryJSON = {
+    query: {
+        __variables?: VariableDeclarations;
+        __name?: string;
+    } & SelectionSetJSON;
+};
+
+export type MutationJSON = {
+    mutation: {
+        __variables?: VariableDeclarations;
+        __name?: string;
+    } & SelectionSetJSON;
+};
+
+export type GraphQLJSON = FragmentJSON | QueryJSON | MutationJSON;
 
 function convertQuery(
     node: any,
@@ -96,7 +172,7 @@ function convertQuery(
     options: IJsonToGraphQLOptions
 ) {
     Object.keys(node)
-        .filter((key) => filterNonConfigFields(key, options.ignoreFields!))
+        .filter((key) => filterNonConfigFields(key, options.ignoreFields))
         .forEach((key) => {
             let value = node[key];
             if (typeof value === 'object') {
@@ -213,7 +289,7 @@ export interface IJsonToGraphQLOptions {
 }
 
 export function jsonToGraphQLQuery(
-    query: any,
+    query: GraphQLJSON,
     options: IJsonToGraphQLOptions = {}
 ) {
     if (!query || typeof query != 'object') {
